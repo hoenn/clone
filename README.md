@@ -1,6 +1,20 @@
 # `clone`
 
-Clone is a small tool that wraps `git` for cloning repositories into a `(host)/owner/repo` folder structure.
+Clone is a small tool that wraps `git` for cloning repositories into a `(host)/owner/repo` folder structure. For example:
+
+```
+github.com/
+    hoenn/
+        clone/
+        go-hn/
+        ynab-metrics/
+    prometheus/
+        node_exporter/
+        prometheus/
+gitlab.com/
+    hoennn/
+        dotfiles/
+```
 
 This is handy for saving some key strokes if this is how you prefer to organize separate repositories to quickly navigate later.
 
