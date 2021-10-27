@@ -42,11 +42,9 @@ var rootCmd = &cobra.Command{
 			fullPath = fmt.Sprintf("/%s/%s", reqPath[0], reqPath[1])
 			fullPath = strings.Trim(fullPath, ".git")
 		}
-		fmt.Println(u.Host)
 		if incHost {
 			fullPath = fmt.Sprintf("/%s%s", u.Host, fullPath)
 		}
-		fmt.Println(fullPath)
 
 		clonePath := "." + fullPath
 		if dryRun {
