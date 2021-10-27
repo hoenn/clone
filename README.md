@@ -21,7 +21,7 @@ Flags:
 
 ### ssh authentication not working
 
-Due to a bug in `go-git` you'll likely need to run the following:
+Due to some behavior in `go-git` you'll likely need to run the following:
 ```
 ssh-add ~/.ssh/id_rsa
 ```
