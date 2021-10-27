@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/go-git/go-git/v5"
 	"github.com/spf13/cobra"
 	giturls "github.com/whilp/git-urls"
 )
@@ -25,15 +26,25 @@ var rootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		fullPath := u.RequestURI()
-		if strings.Contains(fullPath, "git@") {
+		if strings.Contains(rURL, "git@") {
 			reqPath := strings.Split(u.RequestURI(), "/")
-			fullPath = fmt.Sprintf("/%s/%s", reqPath[1], reqPath[2])
-
+			fullPath = fmt.Sprintf("/%s/%s", reqPath[0], reqPath[1])
+			fullPath = strings.Trim(fullPath, ".git")
 		}
+		fmt.Println(u.Host)
+
 		// make clone output relative
-		fullPath = "." + fullPath
+		clonePath := "." + fullPath
 		fmt.Printf("Beginning clone of %s...\n", u.String())
-		fmt.Println(fullPath)
+		_, err = git.PlainClone(clonePath, false, &git.CloneOptions{
+			URL:      rURL,
+			Progress: os.Stdout,
+		})
+		if err != nil {
+			fmt.Printf("Failed to clone: %s\n", err)
+			os.Exit(1)
+		}
+		fmt.Printf("Repository cloned to: %s\n", clonePath)
 	},
 }
 
