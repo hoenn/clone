@@ -30,7 +30,7 @@ Usage:
 Flags:
   -d, --dry-run        show information but do not actually clone repository
   -h, --help           help for clone
-  -i, --include-host   include host in cloned folder structure (default true)
+  -i, --include-host   include host in cloned folder structure (default false)
 ```
 
 ### ssh authentication not working
