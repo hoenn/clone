@@ -1,20 +1,13 @@
 package commands
 
-import (
-	"fmt"
-	"os"
+import "github.com/spf13/cobra"
 
-	"github.com/go-git/go-git/v5"
-)
+var rootCmd = &cobra.Command{
+	Run: func(cmd *cobra.Command, args []string) {
+		_ = cmd.Help()
+	},
+}
 
-func main() {
-	fmt.Println("vim-go")
-	res, err := git.PlainClone("./foo", false, &git.CloneOptions{
-		URL:      "https://github.com/go-git/go-git",
-		Progress: os.Stdout,
-	})
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(res)
+func Execute() error {
+	return rootCmd.Execute()
 }

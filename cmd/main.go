@@ -1,7 +1,13 @@
 package main
 
-import "github.com/hoenn/clone/cmd/commands"
+import (
+	"fmt"
+
+	"github.com/hoenn/clone/cmd/commands"
+)
 
 func main() {
-	commands.Execute()
+	if err := commands.Execute(); err != nil {
+		fmt.Println(err)
+	}
 }
