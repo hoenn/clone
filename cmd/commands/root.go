@@ -16,7 +16,7 @@ var (
 
 func init() {
 	rootCmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "show information but do not actually clone repository")
-	rootCmd.Flags().BoolVarP(&incHost, "include-host", "i", true, "include host in clone structure")
+	rootCmd.Flags().BoolVarP(&incHost, "include-host", "i", true, "include host in cloned folder structure")
 }
 
 var rootCmd = &cobra.Command{
