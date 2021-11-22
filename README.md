@@ -28,14 +28,8 @@ Usage:
   clone 'http(s) or git@ URL' [flags]
 
 Flags:
-  -d, --dry-run        show information but do not actually clone repository
-  -h, --help           help for clone
-  -i, --include-host   include host in cloned folder structure (default false)
-```
-
-### ssh authentication not working
-
-Due to some behavior in `go-git` you'll likely need to run the following:
-```
-ssh-add ~/.ssh/id_rsa
+  -d, --dry-run        show information but do not actually clone repository.
+  -p, --progress       show progress of git to stdout (default true).
+  -h, --help           help for clone.
+  -i, --include-host   include host in cloned folder structure (default false).
 ```
