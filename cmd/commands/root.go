@@ -1,28 +1,30 @@
 package commands
 
 import (
+	"bufio"
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 
-	"github.com/go-git/go-git/v5"
 	"github.com/spf13/cobra"
 	giturls "github.com/whilp/git-urls"
 )
 
 var (
-	incHost, dryRun bool
+	incHost, dryRun, progress bool
 )
 
 func init() {
-	rootCmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "show information but do not actually clone repository")
-	rootCmd.Flags().BoolVarP(&incHost, "include-host", "i", false, "include host in cloned folder structure")
+	rootCmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "show information but do not actually clone repository.")
+	rootCmd.Flags().BoolVar(&progress, "progress", true, "show progress of git to stdout.")
+	rootCmd.Flags().BoolVarP(&incHost, "include-host", "i", false, "include host in cloned folder structure.")
 }
 
 var rootCmd = &cobra.Command{
 	Use:   "clone 'http(s) or git@ URL'",
-	Short: "Clone remote git repositories into a host/owner/repo file structure",
-	Long:  "Clone remote git repositories into a host/owner/repo file structure relative to where this command is run",
+	Short: "Clone remote git repositories into a host/owner/repo file structure.",
+	Long:  "Clone remote git repositories into a host/owner/repo file structure relative to where this command is run.",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 {
 			fmt.Println("expected exactly one URL argument")
@@ -53,16 +55,30 @@ var rootCmd = &cobra.Command{
 			os.Exit(0)
 		}
 
-		fmt.Printf("Beginning clone of %s...\n", u.String())
-		_, err = git.PlainClone(clonePath, false, &git.CloneOptions{
-			URL:      rURL,
-			Progress: os.Stdout,
-		})
+		gitCmdArgs := []string{"clone"}
+		if progress {
+			gitCmdArgs = append(gitCmdArgs, "--progress")
+		}
+
+		gitCmdArgs = append(gitCmdArgs, rURL, clonePath)
+
+		gitCmd := exec.Command("git", gitCmdArgs...)
+		outPipe, err := gitCmd.StderrPipe()
 		if err != nil {
-			fmt.Printf("Failed to clone: %s\n", err)
+			fmt.Printf("could not get std out pipe: %s\n", err)
 			os.Exit(1)
 		}
-		fmt.Printf("Repository cloned to: %s\n", clonePath)
+		err = gitCmd.Start()
+		if err != nil {
+			fmt.Printf("Failed to clone, status code from git: %s\n", err)
+			os.Exit(1)
+		}
+		scanner := bufio.NewScanner(outPipe)
+		for scanner.Scan() {
+			l := scanner.Text()
+			fmt.Println(l)
+		}
+		gitCmd.Wait()
 	},
 }
 
